@@ -1,4 +1,4 @@
-import { setLocalStorage, getLocalStorage } from './utils.mjs';
+import { setLocalStorage, getLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -10,8 +10,8 @@ export default class ProductDetails {
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
     this.renderProductDetails("main");
-    document.getElementById('addToCart')
-      .addEventListener('click', this.addToCart.bind(this));
+    document.getElementById("addToCart")
+      .addEventListener("click", this.addToCart.bind(this));
   }
 
   addToCart() {
