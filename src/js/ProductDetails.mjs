@@ -10,7 +10,8 @@ export default class ProductDetails {
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
     this.renderProductDetails("main");
-    document.getElementById("addToCart")
+    document
+      .getElementById("addToCart")
       .addEventListener("click", this.addToCart.bind(this));
   }
 
@@ -19,7 +20,13 @@ export default class ProductDetails {
     if (!Array.isArray(cartItems)) {
       cartItems = [];
     }
-    cartItems.push(this.product);
+    const existingItem = cartItems.find((item) => item.Id === this.product.Id);
+    if (existingItem) {
+      existingItem.Quantity = (existingItem.Quantity || 1) + 1;
+    } else {
+      this.product.Quantity = 1;
+      cartItems.push(this.product);
+    }
     setLocalStorage("so-cart", cartItems);
   }
 

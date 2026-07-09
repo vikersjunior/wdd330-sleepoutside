@@ -7,5 +7,10 @@ const allowedIds = ["880RR", "985RF", "985PR", "344YJ"];
 const dataSource = new ProductData("tents");
 const listElement = document.querySelector(".product-list");
 
-const productList = new ProductList("tents", dataSource, listElement, allowedIds);
+const productList = new ProductList(
+  "tents",
+  dataSource,
+  listElement,
+  allowedIds,
+);
 productList.init();
