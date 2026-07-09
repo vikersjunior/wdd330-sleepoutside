@@ -29,3 +29,23 @@ export function getParam(param) {
   const product = urlParams.get(param);
   return product;
 }
+
+// Render a list of items into a parent element using a template function.
+// templateFn  – a function that receives one item and returns an HTML string
+// parentElement – the DOM element to insert the rendered HTML into
+// list        – array of data items
+// position    – insertAdjacentHTML position (default: "afterbegin")
+// clear       – if true, clears parentElement's contents before inserting
+export function renderListWithTemplate(
+  templateFn,
+  parentElement,
+  list,
+  position = "afterbegin",
+  clear = false,
+) {
+  if (clear) {
+    parentElement.innerHTML = "";
+  }
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
+}
