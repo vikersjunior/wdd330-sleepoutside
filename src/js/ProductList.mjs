@@ -18,20 +18,37 @@ export default class ProductList {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+
     // If provided, only show products whose Id is in this array.
     this.allowedIds = allowedIds;
+
+    // Store the loaded products.
+    this.products = [];
   }
 
   async init() {
     // dataSource.getData() returns a Promise – await resolves it.
-    let list = await this.dataSource.getData();
+    this.products = await this.dataSource.getData();
+
+    let list = this.products;
+
     if (this.allowedIds) {
       list = list.filter((item) => this.allowedIds.includes(item.Id));
     }
+
     this.renderList(list);
+    this.displayProductCount(list);
   }
 
   renderList(list) {
     renderListWithTemplate(productCardTemplate, this.listElement, list);
+  }
+
+  displayProductCount(list) {
+    const counter = document.querySelector("#product-count");
+
+    if (counter) {
+      counter.textContent = `${list.length} Products Available`;
+    }
   }
 }
