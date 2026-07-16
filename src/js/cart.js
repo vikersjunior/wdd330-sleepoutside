@@ -14,14 +14,17 @@ function renderCartContents() {
 
 function cartItemTemplate(item) {
   const quantity = item.Quantity || 1;
+  const image =
+    item.Image || item.Images?.PrimaryMedium || item.Images?.PrimarySmall || "";
+  const color = item.Colors?.[0]?.ColorName || "";
   return `<li class="cart-card divider" data-id="${item.Id}">
   <a href="#" class="cart-card__image">
-    <img src="${item.Image}" alt="${item.Name}" />
+    <img src="${image}" alt="${item.Name}" />
   </a>
   <a href="#">
     <h2 class="card__name">${item.Name}</h2>
   </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+  <p class="cart-card__color">${color}</p>
   <div class="cart-card__quantity">
     <label for="qty-${item.Id}">qty:</label>
     <button type="button" class="qty-decrease" data-id="${item.Id}" aria-label="Decrease quantity">-</button>
