@@ -30,12 +30,13 @@ export function getParam(param) {
   return product;
 }
 
-// Render a list of items into a parent element using a template function.
-// templateFn  – a function that receives one item and returns an HTML string
-// parentElement – the DOM element to insert the rendered HTML into
-// list        – array of data items
-// position    – insertAdjacentHTML position (default: "afterbegin")
-// clear       – if true, clears parentElement's contents before inserting
+export function renderWithTemplate(template, parentElement, data, callback) {
+  parentElement.innerHTML = template;
+  if (callback) {
+    callback(data);
+  }
+}
+
 export function renderListWithTemplate(
   templateFn,
   parentElement,
@@ -48,4 +49,28 @@ export function renderListWithTemplate(
   }
   const htmlStrings = list.map(templateFn);
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
+}
+
+export async function loadTemplate(path) {
+  const res = await fetch(path);
+  const template = await res.text();
+  return template;
+}
+
+export async function loadHeaderFooter() {
+  const [headerTemplate, footerTemplate] = await Promise.all([
+    loadTemplate("/partials/header.html"),
+    loadTemplate("/partials/footer.html"),
+  ]);
+
+  const headerElement = document.querySelector("#main-header");
+  const footerElement = document.querySelector("#main-footer");
+
+  if (headerElement) {
+    renderWithTemplate(headerTemplate, headerElement);
+  }
+
+  if (footerElement) {
+    renderWithTemplate(footerTemplate, footerElement);
+  }
 }
