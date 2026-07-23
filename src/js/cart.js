@@ -14,14 +14,17 @@ function renderCartContents() {
 
 function cartItemTemplate(item) {
   const quantity = item.Quantity || 1;
+  const image =
+    item.Image || item.Images?.PrimaryMedium || item.Images?.PrimarySmall || "";
+  const color = item.Colors?.[0]?.ColorName || "";
   return `<li class="cart-card divider" data-id="${item.Id}">
   <a href="#" class="cart-card__image">
-    <img src="${item.Image}" alt="${item.Name}" />
+    <img src="${image}" alt="${item.Name}" />
   </a>
   <a href="#">
     <h2 class="card__name">${item.Name}</h2>
   </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+  <p class="cart-card__color">${color}</p>
   <div class="cart-card__quantity">
     <label for="qty-${item.Id}">qty:</label>
     <button type="button" class="qty-decrease" data-id="${item.Id}" aria-label="Decrease quantity">-</button>
@@ -36,6 +39,7 @@ function cartItemTemplate(item) {
     <button type="button" class="qty-increase" data-id="${item.Id}" aria-label="Increase quantity">+</button>
   </div>
   <p class="cart-card__price">$${(item.FinalPrice * quantity).toFixed(2)}</p>
+  <button type="button" class="cart-card__remove" data-id="${item.Id}" aria-label="Remove item from cart">×</button>
 </li>`;
 }
 
@@ -70,6 +74,17 @@ function updateQuantity(id, newQuantity) {
   renderCartContents();
 }
 
+function removeFromCart(id) {
+  let cartItems = getLocalStorage("so-cart");
+  if (!Array.isArray(cartItems)) {
+    cartItems = [];
+  }
+
+  const updatedItems = cartItems.filter((item) => item.Id !== id);
+  setLocalStorage("so-cart", updatedItems);
+  renderCartContents();
+}
+
 function attachQuantityListeners() {
   document.querySelectorAll(".qty-input").forEach((input) => {
     input.addEventListener("change", (e) => {
@@ -90,6 +105,12 @@ function attachQuantityListeners() {
       const id = e.target.dataset.id;
       const input = document.getElementById(`qty-${id}`);
       updateQuantity(id, Number(input.value) + 1);
+    });
+  });
+
+  document.querySelectorAll(".cart-card__remove").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      removeFromCart(e.currentTarget.dataset.id);
     });
   });
 }

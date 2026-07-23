@@ -9,6 +9,9 @@ export default class ProductDetails {
 
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
+    if (this.product?.Images?.PrimaryMedium && !this.product.Image) {
+      this.product.Image = this.product.Images.PrimaryMedium;
+    }
     this.renderProductDetails("main");
     document
       .getElementById("addToCart")
@@ -20,6 +23,10 @@ export default class ProductDetails {
     if (!Array.isArray(cartItems)) {
       cartItems = [];
     }
+    this.product.Image =
+      this.product.Image ||
+      this.product.Images?.PrimaryMedium ||
+      this.product.Images?.PrimaryLarge;
     const existingItem = cartItems.find((item) => item.Id === this.product.Id);
     if (existingItem) {
       existingItem.Quantity = (existingItem.Quantity || 1) + 1;
@@ -32,19 +39,22 @@ export default class ProductDetails {
 
   renderProductDetails(selector) {
     const element = document.querySelector(selector);
+    const brand = this.product.Brand?.Name || "";
+    const color = this.product.Colors?.[0]?.ColorName || "";
+    const description = this.product.DescriptionHtmlSimple || "";
     element.innerHTML = `
       <section class="product-detail">
-        <h3>${this.product.Brand.Name}</h3>
+        <h3>${brand}</h3>
         <h2 class="divider">${this.product.NameWithoutBrand}</h2>
         <img
           class="divider"
-          src="${this.product.Image}"
+          src="${this.product.Images?.PrimaryLarge || this.product.Image}"
           alt="${this.product.NameWithoutBrand}"
         />
         <p class="product-card__price">$${this.product.FinalPrice}</p>
-        <p class="product__color">${this.product.Colors[0].ColorName}</p>
+        <p class="product__color">${color}</p>
         <p class="product__description">
-          ${this.product.DescriptionHtmlSimple}
+          ${description}
         </p>
         <div class="product-detail__add">
           <button id="addToCart" data-id="${this.product.Id}">Add to Cart</button>
