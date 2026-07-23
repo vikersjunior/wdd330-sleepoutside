@@ -12,8 +12,92 @@
     <header class="divider" id="main-header"></header>
 
     <main class="divider">
-      <section class="products">
+      <section class="products checkout-page">
         <h2>Review & Place your Order</h2>
+        <div class="checkout-layout">
+          <form id="checkout-form" name="checkout-form">
+            <h3>Customer Information</h3>
+            <label for="fname">First Name</label>
+            <input id="fname" name="fname" autocomplete="given-name" required />
+            <label for="lname">Last Name</label>
+            <input
+              id="lname"
+              name="lname"
+              autocomplete="family-name"
+              required
+            />
+            <label for="street">Street Address</label>
+            <input
+              id="street"
+              name="street"
+              autocomplete="street-address"
+              required
+            />
+            <label for="city">City</label>
+            <input
+              id="city"
+              name="city"
+              autocomplete="address-level2"
+              required
+            />
+            <label for="state">State</label>
+            <input
+              id="state"
+              name="state"
+              autocomplete="address-level1"
+              required
+            />
+            <label for="zip">Zip Code</label>
+            <input
+              id="zip"
+              name="zip"
+              inputmode="numeric"
+              autocomplete="postal-code"
+              required
+            />
+
+            <h3>Payment</h3>
+            <label for="cardNumber">Credit Card Number</label>
+            <input
+              id="cardNumber"
+              name="cardNumber"
+              inputmode="numeric"
+              autocomplete="cc-number"
+              required
+            />
+            <label for="expiration">Expiration Date</label>
+            <input
+              id="expiration"
+              name="expiration"
+              placeholder="MM/YY"
+              autocomplete="cc-exp"
+              required
+            />
+            <label for="code">Security Code</label>
+            <input
+              id="code"
+              name="code"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              required
+            />
+            <button type="submit">Place Order</button>
+            <p id="checkout-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="order-summary">
+            <h3>Order Summary</h3>
+            <p><span>Items</span> <span id="item-count">0 items</span></p>
+            <p><span>Subtotal</span> <span id="subtotal">$0.00</span></p>
+            <p><span>Tax</span> <span id="tax">$0.00</span></p>
+            <p>
+              <span>Shipping Estimate</span> <span id="shipping">$0.00</span>
+            </p>
+            <p class="order-total">
+              <span>Order Total</span> <span id="order-total">$0.00</span>
+            </p>
+          </aside>
+        </div>
       </section>
     </main>
 
