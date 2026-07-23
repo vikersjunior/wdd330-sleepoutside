@@ -1,8 +1,9 @@
-function convertToJson(res) {
+async function convertToJson(res) {
+  const jsonResponse = await res.json();
   if (res.ok) {
-    return res.json();
+    return jsonResponse;
   }
-  throw new Error(`Request failed: ${res.status}`);
+  throw { name: "servicesError", message: jsonResponse };
 }
 
 export default class ExternalServices {

@@ -1,5 +1,5 @@
 import ExternalServices from "./ExternalServices.mjs";
-import { getLocalStorage } from "./utils.mjs";
+import { alertMessage, getLocalStorage } from "./utils.mjs";
 
 function formDataToJSON(formElement) {
   const formData = new FormData(formElement);
@@ -10,6 +10,16 @@ function formDataToJSON(formElement) {
   });
 
   return convertedJSON;
+}
+
+function errorMessages(error) {
+  const value = error?.message ?? error;
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap((item) => errorMessages(item));
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap((item) => errorMessages(item));
+  }
+  return ["We could not submit your order. Please try again."];
 }
 
 export default class CheckoutProcess {
@@ -81,13 +91,23 @@ export default class CheckoutProcess {
   }
 
   async checkout(form) {
-    const order = formDataToJSON(form);
-    order.orderDate = new Date().toISOString();
-    order.items = this.packageItems(this.list);
-    order.orderTotal = this.orderTotal.toFixed(2);
-    order.shipping = this.shipping;
-    order.tax = this.tax.toFixed(2);
+    try {
+      const order = formDataToJSON(form);
+      order.orderDate = new Date().toISOString();
+      order.items = this.packageItems(this.list);
+      order.orderTotal = this.orderTotal.toFixed(2);
+      order.shipping = this.shipping;
+      order.tax = this.tax.toFixed(2);
 
-    return this.externalServices.checkout(order);
+      const response = await this.externalServices.checkout(order);
+      localStorage.removeItem(this.key);
+      window.location.href = "./success.html";
+      return response;
+    } catch (error) {
+      errorMessages(error).forEach((message, index) => {
+        alertMessage(message, index === 0);
+      });
+      return null;
+    }
   }
 }

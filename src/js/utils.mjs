@@ -13,6 +13,19 @@ export function getLocalStorage(key) {
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
+
+export function alertMessage(message, scroll = true) {
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+  alert.innerHTML = `<span>${message}</span><button type="button" aria-label="Dismiss message">X</button>`;
+  alert.addEventListener("click", (event) => {
+    if (event.target.tagName === "BUTTON") alert.remove();
+  });
+
+  const main = document.querySelector("main");
+  if (main) main.prepend(alert);
+  if (scroll) window.scrollTo(0, 0);
+}
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {

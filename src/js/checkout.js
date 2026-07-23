@@ -1,4 +1,4 @@
-import { loadHeaderFooter } from "./utils.mjs";
+import { alertMessage, loadHeaderFooter } from "./utils.mjs";
 import CheckoutProcess from "./CheckoutProcess.mjs";
 
 loadHeaderFooter();
@@ -15,13 +15,36 @@ zip.addEventListener("input", () => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const expiration = form.elements.expiration.value.trim();
+  const expirationMatch = expiration.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
+  const now = new Date();
+  const expirationDate = expirationMatch
+    ? new Date(
+        2000 + Number(expirationMatch[2]),
+        Number(expirationMatch[1]),
+        0,
+        23,
+        59,
+        59,
+      )
+    : null;
+  if (!expirationMatch || !expirationDate || expirationDate <= now) {
+    alertMessage("Please enter a valid future expiration date.");
+    return;
+  }
+
   message.textContent = "Submitting your order...";
 
   try {
-    await checkout.checkout(form);
-    message.textContent = "Your order was submitted successfully!";
-    form.reset();
+    const result = await checkout.checkout(form);
+    if (!result) message.textContent = "Please correct the errors above.";
   } catch (error) {
-    message.textContent = "We could not submit your order. Please try again.";
+    alertMessage("We could not submit your order. Please try again.");
+    message.textContent = "";
   }
 });
