@@ -1,4 +1,4 @@
-import { loadHeaderFooter, getParam } from "./utils.mjs";
+import { loadHeaderFooter, getParam, qs } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
 
@@ -22,3 +22,10 @@ if (titleElement) {
 
 const productList = new ProductList(category, dataSource, listElement);
 productList.init();
+
+const sortSelect = qs("#sort");
+if (sortSelect) {
+  sortSelect.addEventListener("change", (e) => {
+    productList.sortList(e.target.value);
+  });
+}
