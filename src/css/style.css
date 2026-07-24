@@ -168,6 +168,33 @@ button {
   color: var(--dark-grey);
 }
 
+.products_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.products_header h2 {
+  margin: 0;
+}
+
+.product-list_controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-list_controls select {
+  padding: 0.3em 0.5em;
+}
+
+.product-list_controls select {
+  padding: 0.3em 0.5em;
+}
+
 /* Styles for product lists */
 .product-card {
   flex: 1 1 45%;
